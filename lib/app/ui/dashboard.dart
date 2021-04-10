@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api/app/repositry/data_repositry.dart';
+import 'package:flutter_api/app/repositry/end_pointdata.dart';
 import 'package:flutter_api/app/service/api.dart';
-import 'package:flutter_api/ui/endPoint_card.dart';
+import 'package:flutter_api/app/ui/endPoint_card.dart';
 import 'package:provider/provider.dart';
 
 class DashBoard extends StatefulWidget {
@@ -12,7 +13,7 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
-  int _cases;
+  EndPointData _endPointData;
 
   @override
   void initState() {
@@ -22,10 +23,10 @@ class _DashBoardState extends State<DashBoard> {
 
   Future<void> _updateDate() async {
     final dataRepositry = Provider.of<DataRepositry>(context, listen: false);
-    final cases = await dataRepositry.getEndPointData(EndPoint.cases);
+    final endPointData = await dataRepositry.getAllEndPointData();
 
     setState(() {
-      _cases = cases;
+      _endPointData = endPointData;
     });
   }
 
@@ -40,10 +41,13 @@ class _DashBoardState extends State<DashBoard> {
           onRefresh: () => _updateDate(),
           child: ListView(
             children: [
-              EndPointcard(
-                endPoint: EndPoint.cases,
-                value: _cases,
-              ),
+              for (var endPoint in EndPoint.values)
+                EndPointcard(
+                  endPoint: endPoint,
+                  value: _endPointData != null
+                      ? _endPointData.values[endPoint]
+                      : null,
+                ),
             ],
           ),
         ),
