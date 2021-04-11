@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_api/app/repositry/end_pointdata.dart';
 import 'package:flutter_api/app/service/api_service.dart';
 import 'package:flutter_api/app/service/api.dart';
+import 'package:flutter_api/app/service/dart_cache_service.dart';
 import 'package:http/http.dart';
 
 class DataRepositry {
   DataRepositry({
     @required this.apiService,
+    @required this.cacheService,
   });
 
   final APIService apiService;
+  final DataCacheService cacheService;
+
   String _accessToken;
+
+  EndPointsData getAllEndpointsCacheData() => cacheService.getData();
 
   Future<EndPointData> getEndPointData(EndPoint endpoint) async =>
       await _getDataRefreshToken<EndPointData>(
@@ -18,10 +24,15 @@ class DataRepositry {
             accessToken: _accessToken, endPoint: endpoint),
       );
 
-  Future<EndPointsData> getAllEndPointData() async =>
-      await _getDataRefreshToken<EndPointsData>(
-        onGetData: () => _getAllEndpointData(),
-      );
+  Future<EndPointsData> getAllEndPointData() async {
+    final endPointsData = await _getDataRefreshToken<EndPointsData>(
+      onGetData: () => _getAllEndpointData(),
+    );
+
+    await cacheService.setData(endPointsData);
+
+    return endPointsData;
+  }
 
   Future<T> _getDataRefreshToken<T>({Future<T> Function() onGetData}) async {
     try {

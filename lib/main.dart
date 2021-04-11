@@ -3,17 +3,30 @@ import 'package:flutter_api/app/service/api_service.dart';
 import 'package:flutter_api/app/repositry/data_repositry.dart';
 import 'package:flutter_api/app/service/api.dart';
 import 'package:flutter_api/app/service/api_key.dart';
+import 'package:flutter_api/app/service/dart_cache_service.dart';
 import 'package:flutter_api/app/ui/dashboard.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   // Intl.defaultLocale = "ja_JP";
   // await initializeDateFormatting();
-  runApp(MyApp());
+  //
+  final pres = await SharedPreferences.getInstance();
+  runApp(MyApp(
+    pres: pres,
+  ));
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({
+    Key key,
+    @required this.pres,
+  }) : super(key: key);
+
+  final SharedPreferences pres;
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -22,6 +35,9 @@ class MyApp extends StatelessWidget {
           create: (context) => DataRepositry(
             apiService: APIService(
               api: API(apiKey: APIKeys.sandboxKey),
+            ),
+            cacheService: DataCacheService(
+              pref: pres,
             ),
           ),
         )

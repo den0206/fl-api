@@ -35,7 +35,7 @@ class APIService {
     @required EndPoint endPoint,
   }) async {
     final uri = api.endpointUri(endPoint);
-
+    print(uri);
     final response = await http.get(
       uri,
       headers: {

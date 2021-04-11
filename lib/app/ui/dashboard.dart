@@ -22,6 +22,9 @@ class _DashBoardState extends State<DashBoard> {
   @override
   void initState() {
     super.initState();
+    final dataRepositry = Provider.of<DataRepositry>(context, listen: false);
+    _endPointsData = dataRepositry.getAllEndpointsCacheData();
+    print(_endPointsData);
     _updateDate();
   }
 
@@ -53,7 +56,7 @@ class _DashBoardState extends State<DashBoard> {
   Widget build(BuildContext context) {
     final formatter = LastUpdateDateFormatter(
         lastUpdate: _endPointsData != null
-            ? _endPointsData.values[EndPoint.cases].date
+            ? _endPointsData.values[EndPoint.cases]?.date
             : null);
 
     return Container(
