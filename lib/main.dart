@@ -4,9 +4,12 @@ import 'package:flutter_api/app/repositry/data_repositry.dart';
 import 'package:flutter_api/app/service/api.dart';
 import 'package:flutter_api/app/service/api_key.dart';
 import 'package:flutter_api/app/ui/dashboard.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  // Intl.defaultLocale = "ja_JP";
+  // await initializeDateFormatting();
   runApp(MyApp());
 }
 

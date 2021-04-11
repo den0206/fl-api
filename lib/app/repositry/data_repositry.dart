@@ -12,14 +12,14 @@ class DataRepositry {
   final APIService apiService;
   String _accessToken;
 
-  Future<int> getEndPointData(EndPoint endpoint) async =>
-      await _getDataRefreshToken<int>(
+  Future<EndPointData> getEndPointData(EndPoint endpoint) async =>
+      await _getDataRefreshToken<EndPointData>(
         onGetData: () => apiService.getEndPointData(
             accessToken: _accessToken, endPoint: endpoint),
       );
 
-  Future<EndPointData> getAllEndPointData() async =>
-      await _getDataRefreshToken<EndPointData>(
+  Future<EndPointsData> getAllEndPointData() async =>
+      await _getDataRefreshToken<EndPointsData>(
         onGetData: () => _getAllEndpointData(),
       );
 
@@ -40,7 +40,7 @@ class DataRepositry {
     }
   }
 
-  Future<EndPointData> _getAllEndpointData() async {
+  Future<EndPointsData> _getAllEndpointData() async {
     final values = await Future.wait([
       apiService.getEndPointData(
           accessToken: _accessToken, endPoint: EndPoint.cases),
@@ -54,7 +54,7 @@ class DataRepositry {
           accessToken: _accessToken, endPoint: EndPoint.recovered),
     ]);
 
-    return EndPointData(
+    return EndPointsData(
       values: {
         EndPoint.cases: values[0],
         EndPoint.casesSuspected: values[1],

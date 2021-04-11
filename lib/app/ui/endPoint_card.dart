@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api/app/repositry/end_pointdata.dart';
 import 'package:flutter_api/app/service/api.dart';
+import 'package:intl/intl.dart';
 
 class EndPointcard extends StatelessWidget {
   const EndPointcard({Key key, @required this.endPoint, @required this.value})
       : super(key: key);
 
   final EndPoint endPoint;
-  final int value;
+  final EndPointData value;
+
+  String get formattedValue {
+    if (value == null) {
+      return "";
+    }
+
+    return NumberFormat("#,###,###,###").format(value.value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +43,7 @@ class EndPointcard extends StatelessWidget {
                     Image(image: AssetImage(endPoint.assets)),
                     // Image.asset(EndPointExtension.assetName(endPoint)),
                     Text(
-                      value != null ? value.toString() : "",
+                      formattedValue,
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ],

@@ -43,19 +43,28 @@ extension EndPointExtension on EndPoint {
         return "";
     }
   }
+
+  String get path {
+    switch (this) {
+      case EndPoint.cases:
+        return "cases";
+      case EndPoint.casesSuspected:
+        return "casesSuspected";
+      case EndPoint.casesConfirmed:
+        return "casesConfirmed";
+      case EndPoint.deaths:
+        return "deaths";
+      case EndPoint.recovered:
+        return "recovered";
+      default:
+        return "";
+    }
+  }
 }
 
 class API {
   final String apiKey;
   static final String host = "ncov2019-admin.firebaseapp.com";
-
-  static Map<EndPoint, String> _paths = {
-    EndPoint.cases: "cases",
-    EndPoint.casesSuspected: "casesSuspected",
-    EndPoint.casesConfirmed: "casesConfirmed",
-    EndPoint.deaths: "deaths",
-    EndPoint.recovered: "recovered",
-  };
 
   API({
     @required this.apiKey,
@@ -72,6 +81,6 @@ class API {
   Uri endpointUri(EndPoint endpoint) => Uri(
         scheme: "https",
         host: host,
-        path: _paths[endpoint],
+        path: endpoint.path,
       );
 }
